@@ -32,10 +32,45 @@ export interface Result {
 export const getPopularMovies = async () => {
   try {
     const {data} = await axiosInstance.get('/popular?language=en-US&page=1');
-    console.log('====================================');
-    console.log(JSON.stringify(data, null, 4));
-    console.log('====================================');
     return data.results as Result[];
+  } catch (error) {
+    console.log(JSON.stringify(error, null, 4));
+  }
+};
+
+export const getNowPlayingMovies = async () => {
+  try {
+    const {data} = await axiosInstance.get(
+      '/now_playing?language=en-US&page=1',
+    );
+    const movies: Result[] = data.results.filter(
+      (movie: Result, index: number) => index < 6,
+    );
+    return movies;
+  } catch (error) {
+    console.log(JSON.stringify(error, null, 4));
+  }
+};
+
+export const getUpcomingMovies = async () => {
+  try {
+    const {data} = await axiosInstance.get('/upcoming?language=en-US&page=1');
+    const movies: Result[] = data.results.filter(
+      (movie: Result, index: number) => index < 6,
+    );
+    return movies;
+  } catch (error) {
+    console.log(JSON.stringify(error, null, 4));
+  }
+};
+
+export const getTopRatedMovies = async () => {
+  try {
+    const {data} = await axiosInstance.get('/top_rated?language=en-US&page=1');
+    const movies: Result[] = data.results.filter(
+      (movie: Result, index: number) => index < 6,
+    );
+    return movies;
   } catch (error) {
     console.log(JSON.stringify(error, null, 4));
   }

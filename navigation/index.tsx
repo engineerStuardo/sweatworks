@@ -5,6 +5,9 @@ import HomeIcon from '../svg/HomeIcon';
 import SearchIcon from '../svg/SearchIcon';
 import WatchListIcon from '../svg/WatchListIcon';
 import {COLORS} from '../constants';
+import {createStackNavigator} from '@react-navigation/stack';
+import {Text, View} from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
 type RootTabParamList = {
   home: undefined;
@@ -13,8 +16,34 @@ type RootTabParamList = {
 };
 
 const Tab = createBottomTabNavigator<RootTabParamList>();
+const Stack = createStackNavigator();
+
+const Detail = () => {
+  return (
+    <View>
+      <Text>details</Text>
+    </View>
+  );
+};
 
 export const Navigation = () => {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        options={{headerShown: false}}
+        name="tab"
+        component={BottomTab}
+      />
+      <Stack.Screen
+        name="detail"
+        options={{headerTitle: 'Detail'}}
+        component={Detail}
+      />
+    </Stack.Navigator>
+  );
+};
+
+export const BottomTab = () => {
   return (
     <Tab.Navigator
       screenOptions={{
