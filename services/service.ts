@@ -1,5 +1,6 @@
 import axios from 'axios';
 import env from 'react-native-config';
+import {getSixMovies} from '../utils/FilterMovies';
 
 const baseURL = env.TMDB_HOST;
 const apiAccessToken = env.ACCESS_TOKEN;
@@ -43,10 +44,7 @@ export const getNowPlayingMovies = async () => {
     const {data} = await axiosInstance.get(
       '/now_playing?language=en-US&page=1',
     );
-    const movies: Result[] = data.results.filter(
-      (movie: Result, index: number) => index < 6,
-    );
-    return movies;
+    return getSixMovies(data.results);
   } catch (error) {
     console.log(JSON.stringify(error, null, 4));
   }
@@ -55,10 +53,7 @@ export const getNowPlayingMovies = async () => {
 export const getUpcomingMovies = async () => {
   try {
     const {data} = await axiosInstance.get('/upcoming?language=en-US&page=1');
-    const movies: Result[] = data.results.filter(
-      (movie: Result, index: number) => index < 6,
-    );
-    return movies;
+    return getSixMovies(data.results);
   } catch (error) {
     console.log(JSON.stringify(error, null, 4));
   }
@@ -67,10 +62,7 @@ export const getUpcomingMovies = async () => {
 export const getTopRatedMovies = async () => {
   try {
     const {data} = await axiosInstance.get('/top_rated?language=en-US&page=1');
-    const movies: Result[] = data.results.filter(
-      (movie: Result, index: number) => index < 6,
-    );
-    return movies;
+    return getSixMovies(data.results);
   } catch (error) {
     console.log(JSON.stringify(error, null, 4));
   }

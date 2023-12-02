@@ -6,8 +6,9 @@ import SearchIcon from '../svg/SearchIcon';
 import WatchListIcon from '../svg/WatchListIcon';
 import {COLORS} from '../constants';
 import {createStackNavigator} from '@react-navigation/stack';
-import {Text, View} from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import {ScrollView, Text, TouchableOpacity, View} from 'react-native';
+import Favorite from '../assets/images/Favorite.svg';
+import BackButton from '../assets/images/BackButton.svg';
 
 type RootTabParamList = {
   home: undefined;
@@ -15,16 +16,29 @@ type RootTabParamList = {
   watchList: undefined;
 };
 
+export type RootStackParamList = {
+  tab: undefined;
+  detail: undefined;
+};
+
 const Tab = createBottomTabNavigator<RootTabParamList>();
-const Stack = createStackNavigator();
+const Stack = createStackNavigator<RootStackParamList>();
 
 const Detail = () => {
   return (
-    <View>
+    <ScrollView style={{backgroundColor: COLORS.background}}>
       <Text>details</Text>
-    </View>
+    </ScrollView>
   );
 };
+
+const Header = () => (
+  <View>
+    <Text style={{fontSize: 16, fontWeight: '600', color: COLORS.darkWhite}}>
+      Detail
+    </Text>
+  </View>
+);
 
 export const Navigation = () => {
   return (
@@ -36,7 +50,29 @@ export const Navigation = () => {
       />
       <Stack.Screen
         name="detail"
-        options={{headerTitle: 'Detail'}}
+        options={{
+          headerTitle: () => <Header />,
+          headerStyle: {
+            backgroundColor: COLORS.background,
+            borderBottomWidth: 0,
+            borderBottomColor: COLORS.background,
+            elevation: 0,
+            shadowOpacity: 0,
+          },
+          headerRight: () => (
+            <View style={{paddingRight: 24}}>
+              <Favorite />
+            </View>
+          ),
+          headerLeft: ({onPress, canGoBack}) =>
+            canGoBack && (
+              <View style={{paddingLeft: 12}}>
+                <TouchableOpacity onPress={onPress}>
+                  <BackButton />
+                </TouchableOpacity>
+              </View>
+            ),
+        }}
         component={Detail}
       />
     </Stack.Navigator>

@@ -15,13 +15,14 @@ import {Result, getPopularMovies} from '../services/service';
 import {Svg, Text as SvgText} from 'react-native-svg';
 import env from 'react-native-config';
 import {TabViewMoview} from '../navigation/TabView';
-import {useNavigation} from '@react-navigation/native';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
+import {RootStackParamList} from '../navigation';
 
 export const Home = () => {
   const [search, setSearch] = useState('');
   const [popularMovies, setPopularMovies] = useState<Result[]>([]);
 
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   useEffect(() => {
     (async () => {

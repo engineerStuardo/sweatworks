@@ -4,6 +4,7 @@ interface Colors {
   background: string;
   white: string;
   lightGray: string;
+  darkWhite: string;
 }
 
 export const COLORS: Colors = {
@@ -12,4 +13,5 @@ export const COLORS: Colors = {
   background: '#242A32',
   white: '#FFF',
   lightGray: '#3A3F47',
+  darkWhite: '#ECECEC',
 };
