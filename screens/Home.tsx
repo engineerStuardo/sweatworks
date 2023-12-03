@@ -76,6 +76,7 @@ export const Home = () => {
             <TouchableOpacity
               onPress={async () => {
                 setMovieId(item.id);
+                navigation.removeListener;
                 navigation.navigate('detail');
               }}>
               <Image
