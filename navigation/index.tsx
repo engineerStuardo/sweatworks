@@ -128,6 +128,15 @@ export const BottomTab = () => {
           tabBarIcon: ({focused, color}) => (
             <WatchListIcon color={color} focused={focused} />
           ),
+          headerShown: true,
+          headerTintColor: COLORS.white,
+          headerStyle: {
+            backgroundColor: COLORS.background,
+            borderBottomWidth: 0,
+            borderBottomColor: COLORS.background,
+            elevation: 0,
+            shadowOpacity: 0,
+          },
         }}
         name="watchList"
         component={WatchList}

@@ -8,6 +8,7 @@ interface Colors {
   textGray: string;
   orange: string;
   watchListText: string;
+  darkerWhite: string;
 }
 
 export const COLORS: Colors = {
@@ -20,6 +21,7 @@ export const COLORS: Colors = {
   textGray: '#92929D',
   orange: '#FF8700',
   watchListText: '#EEE',
+  darkerWhite: '#EBEBEF',
 };
 
 export const TRAILER_URL = 'https://www.youtube.com/watch?v=';
