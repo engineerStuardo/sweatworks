@@ -1,5 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import {ActivityIndicator, FlatList, Image, Text, View} from 'react-native';
+import {
+  ActivityIndicator,
+  FlatList,
+  Image,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
 import env from 'react-native-config';
 import {COLORS} from '../constants';
@@ -9,41 +16,51 @@ import {
   getTopRatedMovies,
   getUpcomingMovies,
 } from '../services/service';
+import useMovies from '../store/moviesStore';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
+import {RootStackParamList} from '.';
 
 const FirstRoute = () => {
-  const [nowPlayingMovies, setNowPlayingMovies] = useState<Result[]>([]);
+  const {setMovies, nowPlaying, setMovieId} = useMovies();
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   useEffect(() => {
     (async () => {
-      setNowPlayingMovies((await getNowPlayingMovies()) || []);
+      setMovies((await getNowPlayingMovies()) || [], 'nowPlaying');
     })();
-  }, []);
+  }, [setMovies]);
 
-  if (nowPlayingMovies.length === 0) {
+  if (nowPlaying.length === 0) {
     return <ActivityIndicator />;
   }
 
   return (
     <View style={{justifyContent: 'center', alignItems: 'center'}}>
       <FlatList
-        data={nowPlayingMovies}
+        data={nowPlaying}
         numColumns={3}
         renderItem={({item}) => (
-          <Image
-            resizeMode="cover"
-            style={{
-              height: 146,
-              width: 100,
-              borderRadius: 16,
-              marginRight: 13,
-              marginBottom: 18,
-            }}
-            source={
-              item.poster_path
-                ? {uri: `${env.IMAGE_HOST}${item.poster_path}`}
-                : placeHolderImage
-            }
-          />
+          <TouchableOpacity
+            onPress={async () => {
+              setMovieId(item.id);
+              navigation.navigate('detail');
+            }}>
+            <Image
+              resizeMode="cover"
+              style={{
+                height: 146,
+                width: 100,
+                borderRadius: 16,
+                marginRight: 13,
+                marginBottom: 18,
+              }}
+              source={
+                item.poster_path
+                  ? {uri: `${env.IMAGE_HOST}${item.poster_path}`}
+                  : placeHolderImage
+              }
+            />
+          </TouchableOpacity>
         )}
       />
     </View>
@@ -51,22 +68,22 @@ const FirstRoute = () => {
 };
 
 const SecondRoute = () => {
-  const [upcomingMovies, setUpcomingMovies] = useState<Result[]>([]);
+  const {setMovies, upcoming} = useMovies();
 
   useEffect(() => {
     (async () => {
-      setUpcomingMovies((await getUpcomingMovies()) || []);
+      setMovies((await getUpcomingMovies()) || [], 'upcoming');
     })();
-  }, []);
+  }, [setMovies]);
 
-  if (upcomingMovies.length === 0) {
+  if (upcoming.length === 0) {
     return <ActivityIndicator />;
   }
 
   return (
     <View style={{justifyContent: 'center', alignItems: 'center'}}>
       <FlatList
-        data={upcomingMovies}
+        data={upcoming}
         numColumns={3}
         renderItem={({item}) => (
           <Image
@@ -90,22 +107,22 @@ const SecondRoute = () => {
   );
 };
 const ThirdRoute = () => {
-  const [topRatedMovies, setTopRatedMovies] = useState<Result[]>([]);
+  const {setMovies, topRated} = useMovies();
 
   useEffect(() => {
     (async () => {
-      setTopRatedMovies((await getTopRatedMovies()) || []);
+      setMovies((await getTopRatedMovies()) || [], 'topRated');
     })();
-  }, []);
+  }, [setMovies]);
 
-  if (topRatedMovies.length === 0) {
+  if (topRated.length === 0) {
     return <ActivityIndicator />;
   }
 
   return (
     <View style={{justifyContent: 'center', alignItems: 'center'}}>
       <FlatList
-        data={topRatedMovies}
+        data={topRated}
         numColumns={3}
         renderItem={({item}) => (
           <Image

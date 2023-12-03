@@ -5,6 +5,8 @@ interface Colors {
   white: string;
   lightGray: string;
   darkWhite: string;
+  textGray: string;
+  orange: string;
 }
 
 export const COLORS: Colors = {
@@ -14,4 +16,8 @@ export const COLORS: Colors = {
   white: '#FFF',
   lightGray: '#3A3F47',
   darkWhite: '#ECECEC',
+  textGray: '#92929D',
+  orange: '#FF8700',
 };
+
+export const TRAILER_URL = 'https://www.youtube.com/watch?v=';

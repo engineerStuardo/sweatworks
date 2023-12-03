@@ -1,6 +1,6 @@
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {Home, Search, WatchList} from '../screens';
+import {Home, MovieDetail, Search, WatchList} from '../screens';
 import HomeIcon from '../svg/HomeIcon';
 import SearchIcon from '../svg/SearchIcon';
 import WatchListIcon from '../svg/WatchListIcon';
@@ -23,14 +23,6 @@ export type RootStackParamList = {
 
 const Tab = createBottomTabNavigator<RootTabParamList>();
 const Stack = createStackNavigator<RootStackParamList>();
-
-const Detail = () => {
-  return (
-    <ScrollView style={{backgroundColor: COLORS.background}}>
-      <Text>details</Text>
-    </ScrollView>
-  );
-};
 
 const Header = () => (
   <View>
@@ -73,7 +65,7 @@ export const Navigation = () => {
               </View>
             ),
         }}
-        component={Detail}
+        component={MovieDetail}
       />
     </Stack.Navigator>
   );

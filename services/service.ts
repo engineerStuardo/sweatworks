@@ -30,10 +30,85 @@ export interface Result {
   vote_count: number;
 }
 
+export interface MovieResponse {
+  results: Result[];
+}
+
+export interface MovieDetail {
+  adult: boolean;
+  backdrop_path: string;
+  belongs_to_collection: any;
+  budget: number;
+  genres: Genre[];
+  homepage: string;
+  id: number;
+  imdb_id: string;
+  original_language: string;
+  original_title: string;
+  overview: string;
+  popularity: number;
+  poster_path: string;
+  production_companies: ProductionCompany[];
+  production_countries: ProductionCountry[];
+  release_date: string;
+  revenue: number;
+  runtime: number;
+  spoken_languages: SpokenLanguage[];
+  status: string;
+  tagline: string;
+  title: string;
+  video: boolean;
+  vote_average: number;
+  vote_count: number;
+}
+
+export interface Genre {
+  id: number;
+  name: string;
+}
+
+export interface ProductionCompany {
+  id: number;
+  logo_path: string;
+  name: string;
+  origin_country: string;
+}
+
+export interface ProductionCountry {
+  iso_3166_1: string;
+  name: string;
+}
+
+export interface SpokenLanguage {
+  english_name: string;
+  iso_639_1: string;
+  name: string;
+}
+
+export interface Trailer {
+  id: number;
+  results: TrailerResult[];
+}
+
+export interface TrailerResult {
+  iso_639_1: string;
+  iso_3166_1: string;
+  name: string;
+  key: string;
+  site: string;
+  size: number;
+  type: string;
+  official: boolean;
+  published_at: string;
+  id: string;
+}
+
 export const getPopularMovies = async () => {
   try {
-    const {data} = await axiosInstance.get('/popular?language=en-US&page=1');
-    return data.results as Result[];
+    const {data} = await axiosInstance.get<MovieResponse>(
+      '/popular?language=en-US&page=1',
+    );
+    return data.results;
   } catch (error) {
     console.log(JSON.stringify(error, null, 4));
   }
@@ -41,7 +116,7 @@ export const getPopularMovies = async () => {
 
 export const getNowPlayingMovies = async () => {
   try {
-    const {data} = await axiosInstance.get(
+    const {data} = await axiosInstance.get<MovieResponse>(
       '/now_playing?language=en-US&page=1',
     );
     return getSixMovies(data.results);
@@ -52,7 +127,9 @@ export const getNowPlayingMovies = async () => {
 
 export const getUpcomingMovies = async () => {
   try {
-    const {data} = await axiosInstance.get('/upcoming?language=en-US&page=1');
+    const {data} = await axiosInstance.get<MovieResponse>(
+      '/upcoming?language=en-US&page=1',
+    );
     return getSixMovies(data.results);
   } catch (error) {
     console.log(JSON.stringify(error, null, 4));
@@ -61,8 +138,35 @@ export const getUpcomingMovies = async () => {
 
 export const getTopRatedMovies = async () => {
   try {
-    const {data} = await axiosInstance.get('/top_rated?language=en-US&page=1');
+    const {data} = await axiosInstance.get<MovieResponse>(
+      '/top_rated?language=en-US&page=1',
+    );
     return getSixMovies(data.results);
+  } catch (error) {
+    console.log(JSON.stringify(error, null, 4));
+  }
+};
+
+export const getMovieDetail = async (movieId: number) => {
+  try {
+    const {data} = await axiosInstance.get<MovieDetail>(
+      `/${movieId}?language=en-US`,
+    );
+    return data;
+  } catch (error) {
+    console.log(JSON.stringify(error, null, 4));
+  }
+};
+
+export const getMovieTrailerKey = async (movieId: number) => {
+  try {
+    const {data} = await axiosInstance.get<Trailer>(
+      `/${movieId}/videos?language=en-US`,
+    );
+    const trailerKey = data.results.filter(
+      (item: TrailerResult) => item.type.toLowerCase() === 'trailer',
+    );
+    return trailerKey[0].key;
   } catch (error) {
     console.log(JSON.stringify(error, null, 4));
   }

@@ -11,27 +11,28 @@ import {
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {COLORS} from '../constants';
 import Search from '../assets/images/Search.svg';
-import {Result, getPopularMovies} from '../services/service';
+import {getMovieDetail, getPopularMovies} from '../services/service';
 import {Svg, Text as SvgText} from 'react-native-svg';
 import env from 'react-native-config';
 import {TabViewMoview} from '../navigation/TabView';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {RootStackParamList} from '../navigation';
+import useMovies, {movieDetailInitialData} from '../store/moviesStore';
 
 export const Home = () => {
+  const {setMovies, popular, setMovieId} = useMovies();
   const [search, setSearch] = useState('');
-  const [popularMovies, setPopularMovies] = useState<Result[]>([]);
 
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   useEffect(() => {
     (async () => {
-      const results = await getPopularMovies();
-      setPopularMovies(results || []);
+      const results = (await getPopularMovies()) || [];
+      setMovies(results, 'popular');
     })();
-  }, []);
+  }, [setMovies]);
 
-  if (popularMovies.length === 0) {
+  if (popular.length === 0) {
     return <ActivityIndicator />;
   }
 
@@ -69,10 +70,14 @@ export const Home = () => {
       <View style={{marginBottom: 24}}>
         <FlatList
           style={{paddingLeft: 20}}
-          data={popularMovies}
+          data={popular}
           contentContainerStyle={{marginBottom: 40}}
           renderItem={({item, index}) => (
-            <TouchableOpacity onPress={() => navigation.navigate('detail')}>
+            <TouchableOpacity
+              onPress={async () => {
+                setMovieId(item.id);
+                navigation.navigate('detail');
+              }}>
               <Image
                 resizeMode="cover"
                 style={{
