@@ -12,9 +12,12 @@ interface Movies {
   topRated: Result[];
   movieId: number;
   movieDetail: MovieDetail;
+  watchList: MovieDetail[];
   setMovies: (movies: Result[], type: MovieType) => void;
   setMovieDetail: (movie: MovieDetail) => void;
   setMovieId: (id: number) => void;
+  setWatchList: (movie: MovieDetail) => void;
+  removeFromWatchList: (movie: MovieDetail) => void;
 }
 
 export const movieDetailInitialData: MovieDetail = {
@@ -47,13 +50,14 @@ export const movieDetailInitialData: MovieDetail = {
 
 const useMovies = create(
   persist<Movies>(
-    set => ({
+    (set, get) => ({
       popular: [],
       nowPlaying: [],
       upcoming: [],
       topRated: [],
       movieDetail: movieDetailInitialData,
       movieId: 0,
+      watchList: [],
       setMovies: (movies, type) => {
         switch (type) {
           case 'popular':
@@ -75,6 +79,14 @@ const useMovies = create(
       },
       setMovieId: movieId => {
         set({movieId});
+      },
+      setWatchList: movieDetail => {
+        set({watchList: [...get().watchList, movieDetail]});
+      },
+      removeFromWatchList: movieDetail => {
+        set({
+          watchList: get().watchList.filter(item => item.id !== movieDetail.id),
+        });
       },
     }),
     {

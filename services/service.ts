@@ -1,6 +1,6 @@
 import axios from 'axios';
 import env from 'react-native-config';
-import {getSixMovies} from '../utils/FilterMovies';
+import {getFirstTrailerKey, getSixMovies} from '../utils/FilterMovies';
 
 const baseURL = env.TMDB_HOST;
 const apiAccessToken = env.ACCESS_TOKEN;
@@ -163,10 +163,7 @@ export const getMovieTrailerKey = async (movieId: number) => {
     const {data} = await axiosInstance.get<Trailer>(
       `/${movieId}/videos?language=en-US`,
     );
-    const trailerKey = data.results.filter(
-      (item: TrailerResult) => item.type.toLowerCase() === 'trailer',
-    );
-    return trailerKey[0].key;
+    return getFirstTrailerKey(data);
   } catch (error) {
     console.log(JSON.stringify(error, null, 4));
   }

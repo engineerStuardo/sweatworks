@@ -8,7 +8,10 @@ import {COLORS} from '../constants';
 import {createStackNavigator} from '@react-navigation/stack';
 import {ScrollView, Text, TouchableOpacity, View} from 'react-native';
 import Favorite from '../assets/images/Favorite.svg';
+import FavoriteAdded from '../assets/images/FavoriteAdded.svg';
 import BackButton from '../assets/images/BackButton.svg';
+import useMovies from '../store/moviesStore';
+import {isAddedToWatchList} from '../utils/FilterMovies';
 
 type RootTabParamList = {
   home: undefined;
@@ -33,6 +36,9 @@ const Header = () => (
 );
 
 export const Navigation = () => {
+  const {movieDetail, setWatchList, watchList, removeFromWatchList} =
+    useMovies();
+  const isAdded = isAddedToWatchList(movieDetail, watchList);
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -52,9 +58,18 @@ export const Navigation = () => {
             shadowOpacity: 0,
           },
           headerRight: () => (
-            <View style={{paddingRight: 24}}>
-              <Favorite />
-            </View>
+            <TouchableOpacity
+              style={{paddingRight: 24}}
+              onPress={() => {
+                if (isAdded) {
+                  removeFromWatchList(movieDetail);
+                  return;
+                }
+
+                setWatchList(movieDetail);
+              }}>
+              {isAdded ? <FavoriteAdded /> : <Favorite />}
+            </TouchableOpacity>
           ),
           headerLeft: ({onPress, canGoBack}) =>
             canGoBack && (
