@@ -48,6 +48,24 @@ export const movieDetailInitialData: MovieDetail = {
   vote_count: 0,
 };
 
+interface Search {
+  searchField: string;
+  searchResult: Result[];
+  setSearchField: (searchField: string) => void;
+  setSearchResult: (searchResult: Result[]) => void;
+}
+
+export const useSearch = create<Search>(set => ({
+  searchField: '',
+  searchResult: [],
+  setSearchField: searchField => {
+    set({searchField});
+  },
+  setSearchResult: searchResult => {
+    set({searchResult});
+  },
+}));
+
 const useMovies = create(
   persist<Movies>(
     (set, get) => ({

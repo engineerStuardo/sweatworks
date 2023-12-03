@@ -11,16 +11,17 @@ import {
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {COLORS} from '../constants';
 import Search from '../assets/images/Search.svg';
-import {getMovieDetail, getPopularMovies} from '../services/service';
+import {Result, getMoviesByTitle, getPopularMovies} from '../services/service';
 import {Svg, Text as SvgText} from 'react-native-svg';
 import env from 'react-native-config';
 import {TabViewMoview} from '../navigation/TabView';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {RootStackParamList} from '../navigation';
-import useMovies, {movieDetailInitialData} from '../store/moviesStore';
+import useMovies, {useSearch} from '../store/moviesStore';
 
 export const Home = () => {
   const {setMovies, popular, setMovieId} = useMovies();
+  const {setSearchField, setSearchResult} = useSearch();
   const [search, setSearch] = useState('');
 
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -35,6 +36,12 @@ export const Home = () => {
   if (popular.length === 0) {
     return <ActivityIndicator />;
   }
+
+  const callback = (result: Result[]) => {
+    setSearchResult(result);
+    setSearchField(search);
+    navigation.navigate('tab', {screen: 'search'});
+  };
 
   return (
     <SafeAreaView
@@ -65,7 +72,12 @@ export const Home = () => {
           value={search}
           placeholder="Search"
         />
-        <Search />
+        <TouchableOpacity
+          onPress={() => {
+            getMoviesByTitle(search, callback);
+          }}>
+          <Search />
+        </TouchableOpacity>
       </View>
       <View style={{marginBottom: 24}}>
         <FlatList

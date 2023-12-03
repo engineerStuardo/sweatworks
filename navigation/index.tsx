@@ -10,6 +10,7 @@ import {ScrollView, Text, TouchableOpacity, View} from 'react-native';
 import Favorite from '../assets/images/Favorite.svg';
 import FavoriteAdded from '../assets/images/FavoriteAdded.svg';
 import BackButton from '../assets/images/BackButton.svg';
+import Info from '../assets/images/Info.svg';
 import useMovies from '../store/moviesStore';
 import {isAddedToWatchList} from '../utils/FilterMovies';
 
@@ -27,10 +28,10 @@ export type RootStackParamList = {
 const Tab = createBottomTabNavigator<RootTabParamList>();
 const Stack = createStackNavigator<RootStackParamList>();
 
-const Header = () => (
+const Header = ({title}: {title: string}) => (
   <View>
     <Text style={{fontSize: 16, fontWeight: '600', color: COLORS.darkWhite}}>
-      Detail
+      {title}
     </Text>
   </View>
 );
@@ -49,7 +50,7 @@ export const Navigation = () => {
       <Stack.Screen
         name="detail"
         options={{
-          headerTitle: () => <Header />,
+          headerTitle: () => <Header title="Detail" />,
           headerStyle: {
             backgroundColor: COLORS.background,
             borderBottomWidth: 0,
@@ -115,8 +116,23 @@ export const BottomTab = () => {
       <Tab.Screen
         options={{
           title: 'Search',
+          headerTitle: () => <Header title="Search" />,
           tabBarIcon: ({focused, color}) => (
             <SearchIcon color={color} focused={focused} />
+          ),
+          headerShown: true,
+          headerTintColor: COLORS.white,
+          headerStyle: {
+            backgroundColor: COLORS.background,
+            borderBottomWidth: 0,
+            borderBottomColor: COLORS.background,
+            elevation: 0,
+            shadowOpacity: 0,
+          },
+          headerRight: () => (
+            <TouchableOpacity style={{paddingRight: 24}}>
+              <Info />
+            </TouchableOpacity>
           ),
         }}
         name="search"

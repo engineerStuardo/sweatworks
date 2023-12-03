@@ -106,7 +106,7 @@ export interface TrailerResult {
 export const getPopularMovies = async () => {
   try {
     const {data} = await axiosInstance.get<MovieResponse>(
-      '/popular?language=en-US&page=1',
+      '/movie/popular?language=en-US&page=1',
     );
     return data.results;
   } catch (error) {
@@ -117,7 +117,7 @@ export const getPopularMovies = async () => {
 export const getNowPlayingMovies = async () => {
   try {
     const {data} = await axiosInstance.get<MovieResponse>(
-      '/now_playing?language=en-US&page=1',
+      '/movie/now_playing?language=en-US&page=1',
     );
     return getSixMovies(data.results);
   } catch (error) {
@@ -128,7 +128,7 @@ export const getNowPlayingMovies = async () => {
 export const getUpcomingMovies = async () => {
   try {
     const {data} = await axiosInstance.get<MovieResponse>(
-      '/upcoming?language=en-US&page=1',
+      '/movie/upcoming?language=en-US&page=1',
     );
     return getSixMovies(data.results);
   } catch (error) {
@@ -139,7 +139,7 @@ export const getUpcomingMovies = async () => {
 export const getTopRatedMovies = async () => {
   try {
     const {data} = await axiosInstance.get<MovieResponse>(
-      '/top_rated?language=en-US&page=1',
+      '/movie/top_rated?language=en-US&page=1',
     );
     return getSixMovies(data.results);
   } catch (error) {
@@ -150,7 +150,7 @@ export const getTopRatedMovies = async () => {
 export const getMovieDetail = async (movieId: number) => {
   try {
     const {data} = await axiosInstance.get<MovieDetail>(
-      `/${movieId}?language=en-US`,
+      `/movie/${movieId}?language=en-US`,
     );
     return data;
   } catch (error) {
@@ -161,9 +161,25 @@ export const getMovieDetail = async (movieId: number) => {
 export const getMovieTrailerKey = async (movieId: number) => {
   try {
     const {data} = await axiosInstance.get<Trailer>(
-      `/${movieId}/videos?language=en-US`,
+      `/movie/${movieId}/videos?language=en-US`,
     );
     return getFirstTrailerKey(data);
+  } catch (error) {
+    console.log(JSON.stringify(error, null, 4));
+  }
+};
+
+export const getMoviesByTitle = async (
+  title: string,
+  callback?: (results: Result[]) => void,
+) => {
+  try {
+    const {data} = await axiosInstance.get<MovieResponse>(
+      `/search/movie?query=${title}&language=en-US&page=1`,
+    );
+    if (callback) {
+      callback(data.results);
+    }
   } catch (error) {
     console.log(JSON.stringify(error, null, 4));
   }
