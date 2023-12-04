@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
 import env from 'react-native-config';
-import {COLORS} from '../constants';
+import {COLORS, PLACEHOLDER_IMAGE} from '../constants';
 import {
   Result,
   getNowPlayingMovies,
@@ -57,7 +57,7 @@ const FirstRoute = () => {
               source={
                 item.poster_path
                   ? {uri: `${env.IMAGE_HOST}${item.poster_path}`}
-                  : placeHolderImage
+                  : {uri: PLACEHOLDER_IMAGE}
               }
             />
           </TouchableOpacity>
@@ -98,7 +98,7 @@ const SecondRoute = () => {
             source={
               item.poster_path
                 ? {uri: `${env.IMAGE_HOST}${item.poster_path}`}
-                : placeHolderImage
+                : {uri: PLACEHOLDER_IMAGE}
             }
           />
         )}
@@ -137,7 +137,7 @@ const ThirdRoute = () => {
             source={
               item.poster_path
                 ? {uri: `${env.IMAGE_HOST}${item.poster_path}`}
-                : placeHolderImage
+                : {uri: PLACEHOLDER_IMAGE}
             }
           />
         )}

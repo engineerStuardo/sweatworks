@@ -25,3 +25,6 @@ export const COLORS: Colors = {
 };
 
 export const TRAILER_URL = 'https://www.youtube.com/watch?v=';
+
+export const PLACEHOLDER_IMAGE =
+  'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/1665px-No-Image-Placeholder.svg.png';
