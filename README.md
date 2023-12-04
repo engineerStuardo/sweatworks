@@ -7,7 +7,7 @@ It has to be simple and split code as much as possible so if someone wants to se
 # 3. Detail how you would do everything that you have not completed.
 Test with jest and react testing library.
 
-# Also you can find ipa and apk files on InstallOnDevice folder.
+# Also you can find ipa and abb files on InstallOnDevice folder.
 
 ## Step 1: Start the Metro Server
 
