@@ -1,163 +1,23 @@
-import React, {useEffect, useState} from 'react';
-import {
-  ActivityIndicator,
-  FlatList,
-  Image,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import React from 'react';
+import {StyleSheet, Text} from 'react-native';
 import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
-import env from 'react-native-config';
-import {COLORS, PLACEHOLDER_IMAGE} from '../constants';
-import {
-  Result,
-  getNowPlayingMovies,
-  getTopRatedMovies,
-  getUpcomingMovies,
-} from '../services/service';
-import useMovies from '../store/moviesStore';
-import {NavigationProp, useNavigation} from '@react-navigation/native';
-import {RootStackParamList} from '.';
-
-const FirstRoute = () => {
-  const {setMovies, nowPlaying, setMovieId} = useMovies();
-  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-
-  useEffect(() => {
-    (async () => {
-      setMovies((await getNowPlayingMovies()) || [], 'nowPlaying');
-    })();
-  }, [setMovies]);
-
-  if (nowPlaying.length === 0) {
-    return <ActivityIndicator />;
-  }
-
-  return (
-    <View style={{justifyContent: 'center', alignItems: 'center'}}>
-      <FlatList
-        data={nowPlaying}
-        numColumns={3}
-        renderItem={({item}) => (
-          <TouchableOpacity
-            onPress={async () => {
-              setMovieId(item.id);
-              navigation.navigate('detail');
-            }}>
-            <Image
-              resizeMode="cover"
-              style={{
-                height: 146,
-                width: 100,
-                borderRadius: 16,
-                marginRight: 13,
-                marginBottom: 18,
-              }}
-              source={
-                item.poster_path
-                  ? {uri: `${env.IMAGE_HOST}${item.poster_path}`}
-                  : {uri: PLACEHOLDER_IMAGE}
-              }
-            />
-          </TouchableOpacity>
-        )}
-      />
-    </View>
-  );
-};
-
-const SecondRoute = () => {
-  const {setMovies, upcoming} = useMovies();
-
-  useEffect(() => {
-    (async () => {
-      setMovies((await getUpcomingMovies()) || [], 'upcoming');
-    })();
-  }, [setMovies]);
-
-  if (upcoming.length === 0) {
-    return <ActivityIndicator />;
-  }
-
-  return (
-    <View style={{justifyContent: 'center', alignItems: 'center'}}>
-      <FlatList
-        data={upcoming}
-        numColumns={3}
-        renderItem={({item}) => (
-          <Image
-            resizeMode="cover"
-            style={{
-              height: 146,
-              width: 100,
-              borderRadius: 16,
-              marginRight: 13,
-              marginBottom: 18,
-            }}
-            source={
-              item.poster_path
-                ? {uri: `${env.IMAGE_HOST}${item.poster_path}`}
-                : {uri: PLACEHOLDER_IMAGE}
-            }
-          />
-        )}
-      />
-    </View>
-  );
-};
-const ThirdRoute = () => {
-  const {setMovies, topRated} = useMovies();
-
-  useEffect(() => {
-    (async () => {
-      setMovies((await getTopRatedMovies()) || [], 'topRated');
-    })();
-  }, [setMovies]);
-
-  if (topRated.length === 0) {
-    return <ActivityIndicator />;
-  }
-
-  return (
-    <View style={{justifyContent: 'center', alignItems: 'center'}}>
-      <FlatList
-        data={topRated}
-        numColumns={3}
-        renderItem={({item}) => (
-          <Image
-            resizeMode="cover"
-            style={{
-              height: 146,
-              width: 100,
-              borderRadius: 16,
-              marginRight: 13,
-              marginBottom: 18,
-            }}
-            source={
-              item.poster_path
-                ? {uri: `${env.IMAGE_HOST}${item.poster_path}`}
-                : {uri: PLACEHOLDER_IMAGE}
-            }
-          />
-        )}
-      />
-    </View>
-  );
-};
+import {COLORS} from '../constants';
+import {NowPlaying} from '../components/NowPlaying';
+import {Upcoming} from '../components/Upcoming';
+import {TopRated} from '../components/TopRated';
 
 const renderScene = SceneMap({
-  first: FirstRoute,
-  second: SecondRoute,
-  third: ThirdRoute,
+  nowPlaying: NowPlaying,
+  upcoming: Upcoming,
+  topRated: TopRated,
 });
 
 export const TabViewMoview = () => {
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
-    {key: 'first', title: 'Now playing'},
-    {key: 'second', title: 'Upcoming'},
-    {key: 'third', title: 'Top rated'},
+    {key: 'nowPlaying', title: 'Now playing'},
+    {key: 'upcoming', title: 'Upcoming'},
+    {key: 'topRated', title: 'Top rated'},
   ]);
 
   return (
@@ -168,18 +28,12 @@ export const TabViewMoview = () => {
       renderTabBar={props => (
         <TabBar
           {...props}
-          indicatorStyle={{
-            backgroundColor: COLORS.lightGray,
-            height: 4,
-            width: 90,
-            left: '5%',
-          }}
-          style={{backgroundColor: COLORS.background, marginBottom: 20}}
+          indicatorStyle={styles.indicatorStyle}
+          style={styles.tabBar}
           renderLabel={({route, focused}) => (
             <Text
               style={{
-                fontSize: 14,
-                color: COLORS.white,
+                ...styles.title,
                 fontWeight: focused ? 500 : 400,
               }}>
               {route.title}
@@ -187,7 +41,23 @@ export const TabViewMoview = () => {
           )}
         />
       )}
-      style={{flex: 1}}
     />
   );
 };
+
+const styles = StyleSheet.create({
+  indicatorStyle: {
+    backgroundColor: COLORS.lightGray,
+    height: 4,
+    width: 90,
+    left: '5%',
+  },
+  tabBar: {
+    backgroundColor: COLORS.background,
+    marginBottom: 20,
+  },
+  title: {
+    fontSize: 14,
+    color: COLORS.white,
+  },
+});
